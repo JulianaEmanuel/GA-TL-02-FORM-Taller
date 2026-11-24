@@ -1,0 +1,92 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{tabularx,array}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{referencias.bib}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\renewcommand{\arraystretch}{1.25}
+\newcommand{\pendiente}[1]{\textit{[#1]}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\begin{document}
+\begin{center}
+\vspace*{.15cm}
+{\large UNIVERSIDAD TÉCNICA ESTATAL QUEVEDO\par}
+\vspace{.7cm}
+Ingeniería de Software Aplicaciones Distribuidas\par
+\vspace{.65cm}
+Diseño de microservicios de\par
+\vspace{.65cm}
+Sistema de Gestión de Reservas de Laboratorio\par
+\vspace{.65cm}
+TOAQUIZA ZAMBRANO BELINDA BETZABETH\par
+\vspace{.65cm}
+PIGUAVE MONTAÑO NIXON ANTONIO\par
+\vspace{.65cm}
+EMANUEL PINO JULIANA ROMINA\par
+\vspace{.65cm}
+HERRERA BARCO HUMBERTO ALDAIR\par
+\vspace{.65cm}
+GA-TL-02 / FORM\par
+\vspace{.65cm}
+Grupo EHPT\par
+\vspace{.65cm}
+Vista previa de la estructura\par
+\vspace{.65cm}
+REPOSITORIO\par
+\vspace{.65cm}
+\href{https://github.com/JulianaEmanuel/GA-TL-02-FORM-Taller.git}{https://github.com/JulianaEmanuel/GA-TL-02-FORM-Taller.git}
+\end{center}
+\thispagestyle{empty}
+\newpage
+\section{Introducción}
+El taller documenta el diseño de componentes de CLAB a partir de la propuesta de arquitectura de la entrega 1.
+
+\section{Diseño de los servicios}
+\input{reservas}
+\input{identidad}
+\input{laboratorios}
+\input{avisos}
+
+\section{API Gateway y comunicación}
+\pendiente{Humberto documenta el acceso web y móvil, el enrutamiento, la autenticación y los límites de solicitudes. Cada responsable identifica sus canales, indica si son síncronos o asíncronos y justifica la tecnología según los requisitos no funcionales.}
+
+\section{Diagrama C4 de componentes}
+\IfFileExists{c4-nivel-3.pdf}{%
+  \includegraphics[width=\linewidth,height=.55\textheight,keepaspectratio]{c4-nivel-3.pdf}%
+}{\pendiente{Incorporar la exportación del diagrama integrado y registrar la ubicación del archivo editable.}}
+
+\newpage
+\section{Tabla de servicios}
+La asignación inicial de requisitos sigue las historias de usuario de E1. Cada responsable completa la propiedad de datos y el contrato de su servicio.
+
+\noindent\begin{tabularx}{\linewidth}{|p{3.3cm}|Y|Y|Y|}
+\hline
+\textbf{Servicio y responsable} & \textbf{Responsabilidad y datos propios} & \textbf{Endpoints o eventos} & \textbf{Requisitos funcionales}\\ \hline
+Reservas y Agenda (Juliana) & \pendiente{Completar} & \pendiente{Completar} & RF-04 a RF-06, RF-11 y RF-12\\ \hline
+Identidad y Académico (Humberto) & \pendiente{Completar} & \pendiente{Completar} & RF-01, RF-02 y RF-16\\ \hline
+Laboratorios y Recursos (Belinda) & \pendiente{Completar} & \pendiente{Completar} & RF-03 y RF-07 a RF-10\\ \hline
+Información y Avisos (Nixon) & \pendiente{Completar} & \pendiente{Completar} & RF-13, RF-15 y vista central de RF-14\\ \hline
+\end{tabularx}
+
+\textbf{RF-14.} Cada servicio registra sus cambios. Información y Avisos reúne la vista central.
+
+\section{Retroalimentación de la revisión}
+\noindent\begin{tabularx}{\linewidth}{|Y|Y|Y|}
+\hline
+\textbf{Observación} & \textbf{Cambio realizado en el diagrama} & \textbf{Razón si no se aplicó}\\ \hline
+\pendiente{Registrar tras la revisión} & & \\ \hline
+\end{tabularx}
+
+\section{Evidencias}
+\pendiente{Añadir la foto fechada del bosquejo grupal. Enlazar los ADR si la revisión cambia una decisión de arquitectura.}
+
+\section{Declaración de IA}
+Se usó OpenAI Codex para preparar la estructura de esta plantilla. \pendiente{Completar la versión y la verificación del equipo antes de entregar.}
+
+\printbibliography[title={Referencias}]
+\end{document}
