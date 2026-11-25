@@ -1,2 +1,37 @@
 \subsection{Reservas y Agenda \hfill Juliana Emanuel}
-\pendiente{Describir los componentes de disponibilidad, reservas, bloqueos y asistencia, y los datos de agenda que conserva el servicio.}
+
+\textbf{Alcance del borrador.} Este flujo cubre la creación de una reserva
+(RF-05) y la detección de conflictos de horario (RF-06).
+La vista sigue el nivel de componentes del modelo C4~\cite{brownC4Componentes}.
+
+\begin{itemize}
+  \item \textbf{API de reservas.} Recibe la operación propuesta
+    \texttt{POST /api/reservas} con el identificador del laboratorio,
+    la fecha y las horas de inicio y fin.
+  \item \textbf{Gestor de reservas.} Verifica los permisos del docente
+    y consulta a Laboratorios y Recursos mediante REST síncrono para
+    validar el laboratorio.
+  \item \textbf{Control de agenda.} Comprueba si la franja coincide con
+    una reserva o un bloqueo vigente. Si está libre, guarda la reserva
+    en la base de datos propia de Agenda y devuelve su identificador.
+\end{itemize}
+
+Si la franja está ocupada, se rechaza la confirmación y se muestran
+horarios alternativos cuando existan. Si Laboratorios no responde,
+la solicitud queda sin confirmar.
+
+La comprobación de cruces y la escritura se realizan en una misma
+transacción, con un bloqueo por laboratorio. Las solicitudes simultáneas
+para el mismo laboratorio se procesan en orden de adquisición del bloqueo.
+
+\subsubsection{Consulta de disponibilidad}
+
+La operación propuesta \texttt{GET /api/reservas/disponibilidad} recibe
+el identificador del laboratorio, la fecha y el intervalo a consultar.
+La API deriva la consulta al Control de agenda, que lee las reservas y
+los bloqueos vigentes en la base de Agenda. La respuesta distingue las
+franjas libres, reservadas y bloqueadas (RF-04).
+
+La disponibilidad refleja el momento de la consulta. Al intentar crear
+una reserva, el servicio vuelve a comprobar la franja dentro de la
+transacción de confirmación.
