@@ -21,7 +21,7 @@ Las responsabilidades por servicio se mantienen. Las coordinaciones de las sigui
 ## 2. Dos documentos: entrega breve y desarrollo de apoyo
 
 - **`docs/informe/main.tex` → `main.pdf`:** informe breve de entrega. Objetivo editorial: 2–3 páginas legibles de contenido; las referencias pueden ocupar una cuarta página si es necesario. La rúbrica no fija un número exacto. Incluye contexto, decisiones, tabla de servicios, tabla de retroalimentación, cierre y referencias citadas.
-- **`docs/informe/main-detallado.tex` → `main-detallado.pdf`:** material de apoyo para el equipo y la revisión técnica. Incluye portada, los desarrollos completos de los cuatro servicios y anexos. No sustituye el informe breve.
+- **`docs/informe/main-detallado.tex` → `main-detallado.pdf`:** material de apoyo para el equipo. Incluye portada, los desarrollos completos de los cuatro servicios y anexos. No sustituye el informe breve.
 - **`docs/diagramas/`:** C4 integrado editable y exportación independiente. No insertar una imagen grande del C4 dentro de `main.tex`.
 - **`docs/evidencias/`:** bosquejos fechados; el informe breve indica su ubicación y no reproduce las fotografías.
 
@@ -44,7 +44,7 @@ Todas las rutas de esta tabla parten de `docs/informe/`. Las extensiones son ori
 | Canales sincrónicos — `secciones/comunicacion-sincronica.tex` | Humberto; validación de los responsables de ambos extremos | Identificar quién llama a quién, REST o gRPC, el motivo ligado al ID real de un RNF y qué ocurre ante fallos. Usar PE-U1 si se justifica gRPC. | Hasta 80 palabras |
 | Eventos y consistencia — `secciones/comunicacion-asincronica.tex` | Nixon; validación de productores y consumidores | Productor/consumidor, eventos, RabbitMQ o Kafka, justificación según RNF y manejo de reintentos, duplicados y consistencia. | Hasta 90 palabras |
 | Tabla de servicios — `tablas/tabla-servicios.tex` | Belinda consolida; cada estudiante completa su servicio | Responsabilidad, datos, endpoints/eventos y RF concretos. Mantener nombres coherentes entre ambos bloques. | Aproximadamente una página |
-| Retroalimentación — `tablas/retroalimentacion.tex` | Todos registran; Belinda consolida; Nixon actualiza el C4 | Una fila por observación real del docente: observación, cambio realizado y razón si no se aplicó. Referenciar el ADR cuando corresponda. | Según la revisión, sin texto repetido |
+| Retroalimentación — `tablas/retroalimentacion.tex` | Belinda | Mantener el registro de que no se realizó revisión docente, sin inventar observaciones ni dejarlo como tarea pendiente. | Una fila de estado |
 | Cierre — `secciones/conclusiones.tex` | Humberto, con aportes de todos | Resumir el resultado y sus límites. Al terminar, reemplazar el texto de trabajo pendiente por las conclusiones verificadas. | Hasta 40 palabras |
 | Referencias — `referencias.bib` | Todos | Fuentes utilizadas, con claves únicas y citas junto a la decisión que respaldan. El PDF solo imprime las citadas. Las referencias pueden ocupar una cuarta página si es necesario. | Las necesarias para respaldar el diseño |
 
@@ -63,13 +63,11 @@ No eliminar una justificación necesaria para alcanzar un número de páginas. P
 
 **Acuerdo pendiente entre Reservas y Laboratorios:** delimitar los bloqueos de agenda y los bloqueos operativos, su propiedad y cómo se propagan. Los borradores mencionan ambos; antes de entregar se debe verificar que la tabla y el C4 no atribuyan el mismo dato a dos servicios como propietarios.
 
-## 5. Revisión docente, retroalimentación y ADR
+## 5. Estado de la retroalimentación
 
-La rúbrica exige una revisión de diseño de **10 minutos**. Todos deben poder explicar por qué los servicios están separados, qué ocurre si uno falla y cómo se mantiene la consistencia entre sus bases.
+Para esta entrega no se realizará revisión docente, según lo indicado por el equipo. La tabla `docs/informe/tablas/retroalimentacion.tex` conserva el registro de que no hubo observaciones docentes, en texto normal. No se deja la revisión ni la creación de ADR derivados de ella como trabajo pendiente.
 
-Durante la revisión, cada integrante registra las observaciones relacionadas con su servicio. Belinda reúne las filas en `tablas/retroalimentacion.tex`. No inventar observaciones ni marcar cambios como realizados antes de implementarlos. En las observaciones aplicadas, indicar qué cambió y dejar la tercera columna como «No aplica»; en las no aplicadas, explicar el motivo en la tercera columna.
-
-Nixon integra los cambios acordados en el C4, con validación de los responsables afectados. Si una decisión cambia la arquitectura, el responsable de esa decisión crea un **nuevo ADR** en `docs/adr/`, con contexto, decisión y consecuencias; los involucrados lo revisan. La fila de retroalimentación debe enlazarlo. Si la revisión aún no se realiza, la tabla debe indicar ese estado real.
+La referencia bibliográfica sobre ADR se conserva como sustento de la documentación de decisiones; no implica que se haya realizado una revisión o que se hayan creado nuevos ADR.
 
 ## 6. Tabla y trazabilidad: revisión de Belinda y del equipo
 
@@ -120,7 +118,16 @@ Los cuatro servicios de `src/` mantienen sus nombres. Los diagramas y fotos exis
 - C4 nivel 3 integrado editable (`.drawio`) y exportación PDF o PNG en `docs/diagramas/`, con bases independientes, Gateway, componentes y canales identificados como sincrónicos/asincrónicos y sus tecnologías.
 - LaTeX breve compilado a PDF con tabla de servicios, tabla de retroalimentación y justificaciones relevantes.
 - Fotografía del bosquejo inicial **grupal** hecho a mano, con fecha visible. Los bosquejos individuales pueden conservarse como apoyo. La evidencia de Belinda ya utiliza la extensión `.jpeg`; respetar ese nombre.
-- Nuevos ADR en `docs/adr/` cuando la revisión cambie decisiones de arquitectura.
 - Versión final en el **repositorio público del PFC utilizado en la entrega 1**, como exige la rúbrica. Este repositorio del taller sirve para preparar el trabajo; publicar aquí no sustituye esa integración final.
 
 La rúbrica compartida no exige un segundo PDF de una página para SGA. Si el docente lo solicita por otra vía, prepararlo como entregable adicional, sin confundirlo con el informe breve.
+
+## 9. Pendientes de archivos de entrega
+
+Estos avisos se controlan aquí para mantener limpio el contexto de ambos PDF. Actualizar la lista al incorporar cada archivo.
+
+- [ ] **Nixon, con validación de todos:** incorporar el C4 nivel 3 integrado editable en `docs/diagramas/c4-nivel-3.drawio`.
+- [ ] **Nixon:** incorporar su exportación en `docs/diagramas/c4-nivel-3.pdf` o `docs/diagramas/c4-nivel-3.png`.
+- [ ] **Equipo; Nixon integra la evidencia:** incorporar la fotografía del bosquejo grupal con fecha visible en `docs/evidencias/bosquejo-grupal.jpg`, `.jpeg` o `.png`.
+
+Los diagramas parciales existentes no sustituyen el C4 integrado. En el documento detallado, los anexos siguen señalando las fotografías que faltan.

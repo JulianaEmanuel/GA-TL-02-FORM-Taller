@@ -35,6 +35,6 @@ El resultado se genera en `docs/informe/main.pdf`. El objetivo editorial es 2–
 
 Para compilar el documento de apoyo, repetir la misma secuencia sustituyendo `main.tex` por `main-detallado.tex` y `biber main` por `biber main-detallado`. Los desarrollos completos permanecen en `docs/informe/microservicios/`.
 
-La tabla de retroalimentación está activa en `docs/informe/tablas/retroalimentacion.tex`. La rúbrica exige la revisión docente y nuevos ADR si cambian decisiones de arquitectura. La entrega final debe integrarse en el repositorio público del PFC usado en la entrega 1.
+La tabla de retroalimentación está activa en `docs/informe/tablas/retroalimentacion.tex`. La tabla registra que no se realizó revisión docente; esta actividad no se mantiene como pendiente para esta entrega. La entrega final debe integrarse en el repositorio público del PFC usado en la entrega 1.
 
-El informe sigue siendo un borrador: faltan aportes y validaciones del equipo y la revisión docente. Compilarlo no implica que los requisitos de entrega estén completos.
+El informe sigue siendo un borrador: faltan aportes y validaciones del equipo. Compilarlo no implica que los requisitos de entrega estén completos.

@@ -1,24 +1,24 @@
 % Responsable de consolidación: Belinda Toaquiza. Aportes: todos.
 \section{Tabla de servicios y trazabilidad funcional}
-Asignación inicial de RF por verificar. Los dos bloques se relacionan por el nombre del servicio.
+\faltante{Asignación inicial de RF por verificar.} Los dos bloques se relacionan por el nombre del servicio.
 
 {\small
 \begin{tabularx}{\linewidth}{|p{3.3cm}|Y|Y|}
 \hline
 \textbf{Microservicio} & \textbf{Responsabilidad} & \textbf{Datos propios}\\ \hline
 Reservas y Agenda & Gestionar reservas, disponibilidad y asistencia & Reservas, agenda, cancelaciones y asistencia\\ \hline
-Identidad y Académico & Por consolidar & Por consolidar\\ \hline
+Identidad y Académico & \faltante{Por consolidar} & \faltante{Por consolidar}\\ \hline
 Laboratorios y Recursos & Administrar espacios, inventario y restricciones operativas & Laboratorios, equipos, tipos, bloqueos operativos, encargados y referencias de fotos\\ \hline
-Información y Avisos & Por consolidar & Por consolidar\\ \hline
+Información y Avisos & \faltante{Por consolidar} & \faltante{Por consolidar}\\ \hline
 \end{tabularx}
 
 \begin{tabularx}{\linewidth}{|p{3.3cm}|Y|Y|Y|}
 \hline
 \textbf{Microservicio} & \textbf{Endpoints} & \textbf{Eventos} & \textbf{RF cubiertos}\\ \hline
-Reservas y Agenda & \footnotesize Creación, disponibilidad, reservas propias, cancelación, bloqueos y asistencia & Por consolidar & RF-04 a RF-06, RF-11 y RF-12\\ \hline
-Identidad y Académico & Por consolidar & Por consolidar & RF-01, RF-02 y RF-16\\ \hline
+Reservas y Agenda & \footnotesize Creación, disponibilidad, reservas propias, cancelación, bloqueos y asistencia & \faltante{Por consolidar} & RF-04 a RF-06, RF-11 y RF-12\\ \hline
+Identidad y Académico & \faltante{Por consolidar} & \faltante{Por consolidar} & RF-01, RF-02 y RF-16\\ \hline
 Laboratorios y Recursos & \path{/laboratorios}, \path{/equipos}, \path{/bloqueos}; condiciones operativas & Bloqueo registrado, modificado o levantado & RF-03 y RF-07 a RF-10\\ \hline
-Información y Avisos & Por consolidar & Por consolidar & RF-13, RF-15 y vista central de RF-14\\ \hline
+Información y Avisos & \faltante{Por consolidar} & \faltante{Por consolidar} & RF-13, RF-15 y vista central de RF-14\\ \hline
 \end{tabularx}
 
 \textbf{RF-14.} Cada servicio registra sus cambios. Información y Avisos reúne la vista central.

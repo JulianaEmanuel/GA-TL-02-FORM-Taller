@@ -1,8 +1,7 @@
 % Belinda consolida. Máximo orientativo: 50 palabras.
 % No incluir aquí los cuatro archivos largos: main-detallado.tex los compila.
 \paragraph{Componentes.}
-Los borradores de Reservas y Laboratorios separan API, lógica de aplicación
-y persistencia. Reservas distingue gestión de reservas, agenda y asistencia;
-Laboratorios, catálogo, inventario, bloqueos y publicación de eventos.
-La descomposición completa de Identidad e Información y Avisos está pendiente
-de integración en el C4.
+El C4 de nivel 3 muestra los componentes que gestionan reservas, recursos
+físicos, accesos y datos académicos, y avisos y auditoría. Reservas y Agenda
+consulta las condiciones operativas de Laboratorios y Recursos antes de
+confirmar una franja. Cada microservicio accede a su propia base de datos.
