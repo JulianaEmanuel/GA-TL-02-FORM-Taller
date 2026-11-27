@@ -1,13 +1,12 @@
 # GA-TL-02-FORM-Taller
 
-## Reparto de microservicios
+Taller de diseño de la arquitectura de microservicios del Sistema de Gestión de Reservas de Laboratorio (CLAB).
 
-| Integrante | Microservicio |
-| --- | --- |
-| Juliana Romina Emanuel Pino | Reservas y Agenda |
-| Humberto Aldair Herrera Barco | Identidad y Académico |
-| Belinda Betzabeth Toaquiza Zambrano | Laboratorios y Recursos |
-| Nixon Antonio Piguave Montaño | Información y Avisos |
+## Organización del trabajo
+
+La asignación de microservicios, responsabilidades, coordinación, secciones del informe y entregables se encuentra en [reparto.md](reparto.md).
+
+El código se organiza por microservicio en `src/` y la documentación en `docs/`. El [catálogo de microservicios](docs/catalogo-microservicios.md) mantiene los nombres e identificadores comunes.
 
 ## Fuente del diseño
 

@@ -1,0 +1,12 @@
+# Auxiliares de compilación LaTeX; los PDF de entrega pueden versionarse.
+/docs/informe/*.aux
+/docs/informe/*.bbl
+/docs/informe/*.bcf
+/docs/informe/*.blg
+/docs/informe/*.fdb_latexmk
+/docs/informe/*.fls
+/docs/informe/*.log
+/docs/informe/*.out
+/docs/informe/*.run.xml
+/docs/informe/*.synctex.gz
+/docs/informe/*.toc

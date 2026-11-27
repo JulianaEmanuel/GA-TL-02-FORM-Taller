@@ -1,4 +1,4 @@
-\subsection{Reservas y Agenda \hfill Juliana Emanuel}
+\subsubsection{Reservas y Agenda \hfill Juliana Emanuel}
 
 \textbf{Alcance del borrador.} Este flujo cubre la creación de una reserva
 (RF-05) y la detección de conflictos de horario (RF-06).
@@ -24,7 +24,7 @@ La comprobación de cruces y la escritura se realizan en una misma
 transacción, con un bloqueo por laboratorio. Las solicitudes simultáneas
 para el mismo laboratorio se procesan en orden de adquisición del bloqueo.
 
-\subsubsection{Consulta de disponibilidad}
+\paragraph{Consulta de disponibilidad}
 
 La operación propuesta \texttt{GET /api/reservas/disponibilidad} recibe
 el identificador del laboratorio, la fecha y el intervalo a consultar.
