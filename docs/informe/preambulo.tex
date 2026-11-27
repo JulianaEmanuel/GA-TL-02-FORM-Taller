@@ -1,0 +1,22 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{tabularx,array}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{referencias.bib}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\renewcommand{\arraystretch}{1.25}
+\newcommand{\pendiente}[1]{\textit{[#1]}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+% Las rutas se resuelven al compilar desde docs/informe.
+\newcommand{\imagenopendiente}[2]{%
+  \IfFileExists{#1}{%
+    \begin{center}
+    \includegraphics[width=\linewidth,height=.55\textheight,keepaspectratio]{#1}
+    \end{center}%
+  }{\pendiente{#2}}%
+}

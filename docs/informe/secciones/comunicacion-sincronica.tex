@@ -1,4 +1,9 @@
-% Coordinación: Humberto Herrera.
-% Aportes de los cuatro responsables de microservicio.
-\subsection{Comunicación sincrónica}
-\pendiente{Consolidar los canales y endpoints propuestos por los servicios. Justificar REST y/o gRPC según los requisitos no funcionales y las mediciones de PE-U1 cuando sean aplicables. El borrador de Reservas ya describe una consulta REST a Laboratorios.}
+% Humberto consolida; los dos responsables de cada canal validan su contrato.
+% Máximo orientativo: 80 palabras. Añadir el ID real de cada RNF al validarlo.
+\paragraph{Comunicación sincrónica y fallos.}
+Los borradores proponen REST sobre HTTPS entre Gateway y servicios, y para consultas
+internas: Reservas consulta condiciones operativas a Laboratorios, y
+Laboratorios consulta Identidad al asignar encargados. REST permite una
+respuesta inmediata y conserva el estilo de API de CLAB. Si Laboratorios
+no responde, la reserva queda sin confirmar; si falla Identidad, no se ejecuta
+la asignación. Falta vincular esta elección a los RNF concretos del PFC.

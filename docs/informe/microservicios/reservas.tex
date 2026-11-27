@@ -1,4 +1,4 @@
-\subsubsection{Reservas y Agenda \hfill Juliana Emanuel}
+\subsection{Reservas y Agenda \hfill Juliana Emanuel}
 
 \textbf{Alcance del borrador.} Este flujo cubre la creación de una reserva
 (RF-05) y la detección de conflictos de horario (RF-06).
@@ -24,7 +24,7 @@ La comprobación de cruces y la escritura se realizan en una misma
 transacción, con un bloqueo por laboratorio. Las solicitudes simultáneas
 para el mismo laboratorio se procesan en orden de adquisición del bloqueo.
 
-\paragraph{Consulta de disponibilidad}
+\subsubsection{Consulta de disponibilidad}
 
 La operación propuesta \texttt{GET /api/reservas/disponibilidad} recibe
 el identificador del laboratorio, la fecha y el intervalo a consultar.
@@ -35,3 +35,37 @@ franjas libres, reservadas y bloqueadas (RF-04).
 La disponibilidad refleja el momento de la consulta. Al intentar crear
 una reserva, el servicio vuelve a comprobar la franja dentro de la
 transacción de confirmación.
+
+\subsubsection{Consulta de reservas propias}
+
+La operación propuesta \texttt{GET /api/reservas/mias} obtiene la identidad
+del docente de la sesión autenticada. El Gestor de reservas filtra por ese
+identificador en la base de Agenda y devuelve las reservas del docente con su
+laboratorio, fecha, horario y estado (RF-05).
+
+\subsubsection{Cancelación de una reserva}
+
+La operación propuesta \texttt{POST /api/reservas/\{id\}/cancelacion} recibe
+el motivo. El Gestor de reservas comprueba que la reserva pertenece al docente.
+Con el mismo bloqueo por laboratorio usado en la creación, vuelve a comprobar
+que sigue pendiente o confirmada. En una sola transacción cambia su estado a
+cancelada y registra el motivo, la fecha y el usuario. La franja deja de estar
+ocupada por esa reserva al confirmar la transacción. Los demás bloqueos y
+reservas vigentes siguen contando para la disponibilidad (RF-05).
+
+\subsubsection{Bloqueos de agenda}
+
+La operación propuesta \texttt{POST /api/agenda/bloqueos} recibe el
+laboratorio, el intervalo y el motivo. El Gestor de bloqueos valida los
+permisos del administrador y registra el bloqueo en Agenda. Para coordinarse
+con la creación de reservas, utiliza el mismo bloqueo por laboratorio.
+Una vez confirmada la transacción, la franja deja de ofrecerse para nuevas
+reservas (RF-11).
+
+\subsubsection{Registro de asistencia}
+
+La operación propuesta \texttt{POST /api/reservas/\{id\}/asistencia}
+recibe el identificador del participante y su estado de presencia o
+ausencia. El componente de asistencia comprueba el permiso del encargado
+y que la reserva esté confirmada. Luego registra la asistencia en Agenda,
+vinculada a la reserva y al participante (RF-12).

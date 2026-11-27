@@ -1,32 +1,12 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage[T1]{fontenc}
-\usepackage[spanish]{babel}
-\usepackage[margin=2.4cm]{geometry}
-\usepackage{tabularx,array}
-\usepackage{graphicx}
-\usepackage[hidelinks]{hyperref}
-\usepackage[backend=biber,style=ieee]{biblatex}
-\addbibresource{referencias.bib}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{5pt}
-\renewcommand{\arraystretch}{1.25}
-\newcommand{\pendiente}[1]{\textit{[#1]}}
-\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-% Las rutas se resuelven al compilar desde docs/informe.
-\newcommand{\imagenopendiente}[2]{%
-  \IfFileExists{#1}{%
-    \begin{center}
-    \includegraphics[width=\linewidth,height=.55\textheight,keepaspectratio]{#1}
-    \end{center}%
-  }{\pendiente{#2}}%
-}
+% Informe breve de entrega. Instrucciones y responsables: ../../reparto.md.
+% Compilar desde docs/informe. No añadir aquí los desarrollos por servicio.
+\input{preambulo}
 \begin{document}
-\input{secciones/portada}
+\input{secciones/encabezado}
 \input{secciones/introduccion}
 \input{secciones/arquitectura}
 \input{tablas/tabla-servicios}
+\input{tablas/retroalimentacion}
 \input{secciones/conclusiones}
-\printbibliography[title={Referencias bibliográficas}]
-\appendix
-\input{secciones/anexos}
+\printbibliography[title={Referencias}]
 \end{document}

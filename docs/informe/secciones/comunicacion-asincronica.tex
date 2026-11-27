@@ -1,4 +1,10 @@
-% Coordinación: Nixon Piguave.
-% Aportes de los cuatro responsables de microservicio.
-\subsection{Comunicación asincrónica}
-\pendiente{Identificar procesos, eventos, productores y consumidores. Justificar Kafka y/o RabbitMQ según los requisitos no funcionales y coordinar la integración de los diagramas parciales.}
+% Nixon consolida. Máximo orientativo: 90 palabras. Confirmar RNF con el equipo.
+\paragraph{Eventos y consistencia.}
+Laboratorios propone RabbitMQ para notificar a Reservas el registro,
+modificación o levantamiento de bloqueos. El cambio y el evento pendiente se
+guardan en una transacción local; un publicador reintenta el envío.
+Reservas descarta duplicados y versiones anteriores y reevalúa las reservas
+afectadas. La consistencia es eventual: un bloqueo puede provocar una
+reevaluación posterior a la confirmación. Esto desacopla la actualización
+de la disponibilidad del consumidor; queda pendiente justificar RabbitMQ
+frente a las alternativas según los RNF del PFC.

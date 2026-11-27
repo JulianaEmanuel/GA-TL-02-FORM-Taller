@@ -19,7 +19,7 @@ El taller toma como punto de partida la arquitectura propuesta para el Sistema d
 
 ## Compilación del informe
 
-El archivo principal es `docs/informe/main.tex`. Se requiere una distribución LaTeX con pdfLaTeX, Biber y los paquetes `fontenc`, `babel` con español, `geometry`, `tabularx`, `array`, `graphicx`, `hyperref`, `biblatex` y el estilo IEEE.
+El archivo de entrega breve es `docs/informe/main.tex`; el desarrollo de apoyo se compila con `docs/informe/main-detallado.tex`. La explicación por sección y el flujo de aportes están en [reparto.md](reparto.md). Se requiere una distribución LaTeX con pdfLaTeX, Biber y los paquetes `fontenc`, `babel` con español, `geometry`, `tabularx`, `array`, `graphicx`, `hyperref`, `biblatex` y el estilo IEEE.
 
 Desde la raíz del proyecto, ejecuta en PowerShell:
 
@@ -31,4 +31,10 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-El resultado se genera en `docs/informe/main.pdf`.
+El resultado se genera en `docs/informe/main.pdf`. El objetivo editorial es 2–3 páginas de contenido, sin portada independiente ni anexos fotográficos; las referencias pueden extender el PDF hasta una cuarta página si es necesario. El diagrama integrado y su exportación se entregan por separado en `docs/diagramas/`.
+
+Para compilar el documento de apoyo, repetir la misma secuencia sustituyendo `main.tex` por `main-detallado.tex` y `biber main` por `biber main-detallado`. Los desarrollos completos permanecen en `docs/informe/microservicios/`.
+
+La tabla de retroalimentación está activa en `docs/informe/tablas/retroalimentacion.tex`. La rúbrica exige la revisión docente y nuevos ADR si cambian decisiones de arquitectura. La entrega final debe integrarse en el repositorio público del PFC usado en la entrega 1.
+
+El informe sigue siendo un borrador: faltan aportes y validaciones del equipo y la revisión docente. Compilarlo no implica que los requisitos de entrega estén completos.

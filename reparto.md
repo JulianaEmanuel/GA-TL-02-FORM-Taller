@@ -1,66 +1,83 @@
 # Reparto de trabajo — GA-TL-02
 
-[Volver al README del repositorio](README.md).
+[Volver al README](README.md).
 
 **Grupo:** EHPT · **Semana 5:** 23 al 29 de noviembre de 2026.
-
 **Sistema:** Gestión de Reservas de Laboratorio (CLAB).
 
-Este repositorio combina el trabajo por microservicio con un informe grupal organizado por secciones. La raíz ya corresponde al taller; no se añade otra carpeta `GA-TL-02/` dentro de ella. Si se integra en el fork del PFC, esta estructura puede ubicarse bajo `GA-TL-02/`.
+## 1. Cada estudiante sigue a cargo de un microservicio completo
 
-## 1. Responsabilidad principal por microservicio
-
-| Integrante | Microservicio | Carpeta de implementación | Diseño del servicio |
+| Integrante | Microservicio | Implementación | Desarrollo de apoyo dentro de `docs/informe/` |
 | --- | --- | --- | --- |
-| Juliana Romina Emanuel Pino | Reservas y Agenda | `src/microservicio_reservas/` | `docs/informe/microservicios/reservas.tex` |
-| Humberto Aldair Herrera Barco | Identidad y Académico | `src/microservicio_identidad/` | `docs/informe/microservicios/identidad.tex` |
-| Belinda Betzabeth Toaquiza Zambrano | Laboratorios y Recursos | `src/microservicio_laboratorios/` | `docs/informe/microservicios/laboratorios.tex` |
-| Nixon Antonio Piguave Montaño | Información y Avisos | `src/microservicio_avisos/` | `docs/informe/microservicios/avisos.tex` |
+| Juliana Romina Emanuel Pino | Reservas y Agenda | `src/microservicio_reservas/` | `microservicios/reservas.tex` |
+| Humberto Aldair Herrera Barco | Identidad y Académico | `src/microservicio_identidad/` | `microservicios/identidad.tex` |
+| Belinda Betzabeth Toaquiza Zambrano | Laboratorios y Recursos | `src/microservicio_laboratorios/` | `microservicios/laboratorios.tex` |
+| Nixon Antonio Piguave Montaño | Información y Avisos | `src/microservicio_avisos/` | `microservicios/avisos.tex` |
 
-Cada integrante diseña su servicio de forma completa: alcance y responsabilidad única, entidades y base de datos propia, componentes y dependencias, endpoints, interacciones síncronas, eventos producidos y consumidos, RF cubiertos y justificación de decisiones. También aporta el bosquejo fechado, su diagrama parcial y la información de su fila en la tabla de servicios.
+Cada integrante desarrolla alcance y SRP, datos propios y base independiente, componentes, endpoints, canales sincrónicos, eventos producidos/consumidos, RF atendidos y justificación según RNF. También aporta el bosquejo fechado y su diagrama parcial. Los nombres comunes están en [el catálogo](docs/catalogo-microservicios.md).
 
-Los nombres e identificadores comunes se mantienen en [el catálogo](docs/catalogo-microservicios.md). Las carpetas `src/` conservan sus nombres y actualmente contienen marcadores `.gitkeep`; esta reorganización no añade implementaciones.
+Las responsabilidades por servicio se mantienen. Las coordinaciones de las siguientes secciones consisten en reunir, sintetizar y comprobar los aportes de todos. Los contratos entre servicios se acuerdan entre sus responsables.
 
-## 2. Coordinación de aspectos compartidos
+## 2. Dos documentos: entrega breve y desarrollo de apoyo
 
-| Coordinador | Integración grupal |
-| --- | --- |
-| Juliana | Catálogo común, coherencia de límites y propiedad de datos; introducción |
-| Humberto | API Gateway, contratos y comunicación sincrónica; conclusiones con aportes de todos |
-| Nixon | Eventos y comunicación asincrónica; integración del bosquejo grupal y del C4 nivel 3 |
-| Belinda | Coherencia de componentes, consolidación de la tabla y verificación de cobertura funcional |
+- **`docs/informe/main.tex` → `main.pdf`:** informe breve de entrega. Objetivo editorial: 2–3 páginas legibles de contenido; las referencias pueden ocupar una cuarta página si es necesario. La rúbrica no fija un número exacto. Incluye contexto, decisiones, tabla de servicios, tabla de retroalimentación, cierre y referencias citadas.
+- **`docs/informe/main-detallado.tex` → `main-detallado.pdf`:** material de apoyo para el equipo y la revisión técnica. Incluye portada, los desarrollos completos de los cuatro servicios y anexos. No sustituye el informe breve.
+- **`docs/diagramas/`:** C4 integrado editable y exportación independiente. No insertar una imagen grande del C4 dentro de `main.tex`.
+- **`docs/evidencias/`:** bosquejos fechados; el informe breve indica su ubicación y no reproduce las fotografías.
 
-Coordinar significa reunir y comprobar los aportes de los cuatro servicios. No sustituye la responsabilidad de cada estudiante sobre el diseño completo de su microservicio. Los contratos entre dos servicios se acuerdan entre sus responsables.
+`main.tex` solo organiza las inclusiones. Cada coordinador escribe en el archivo de su sección. Los detalles extensos permanecen en `microservicios/`; no añadir sus `\input{}` al informe breve. La portada y los anexos solo se incluyen en el documento de apoyo.
 
-## 3. Informe por secciones
+**Estado actual:** es un borrador. Los campos «Por consolidar» señalan información pendiente; no son contenido final de entrega. Los resúmenes de Reservas y Laboratorios se obtuvieron de los aportes existentes. Sus responsables deben validarlos antes de la entrega.
 
-Todos aportan a las secciones técnicas desde su propio microservicio. Cada coordinador edita el archivo transversal para mantener un único texto coherente y evitar conflictos.
+## 3. Qué escribe cada compañero en el informe breve
 
-| Sección | Archivo dentro de `docs/informe/` | Coordinación |
-| --- | --- | --- |
-| Portada | `secciones/portada.tex` | Equipo |
-| 1. Introducción | `secciones/introduccion.tex` | Juliana |
-| 2. Diseño de la arquitectura | `secciones/arquitectura.tex` | Nixon y Belinda |
-| 2.1. Microservicios y propiedad de datos | `secciones/microservicios-datos.tex` | Juliana |
-| 2.2. Componentes internos | `secciones/componentes-internos.tex` | Belinda; incluye los cuatro archivos de `microservicios/` |
-| 2.3. API Gateway | `secciones/api-gateway.tex` | Humberto |
-| 2.4. Comunicación sincrónica | `secciones/comunicacion-sincronica.tex` | Humberto |
-| 2.5. Comunicación asincrónica | `secciones/comunicacion-asincronica.tex` | Nixon |
-| 2.6. Diagrama C4 integrado | Dentro de `secciones/arquitectura.tex` | Nixon |
-| 3. Tabla de servicios y trazabilidad | `tablas/tabla-servicios.tex` | Belinda; aportes de todos |
-| 4. Conclusiones | `secciones/conclusiones.tex` | Humberto; aportes de todos |
-| Referencias bibliográficas | `referencias.bib` | Todos |
-| Anexos y evidencias | `secciones/anexos.tex` | Todos |
+Todas las rutas de esta tabla parten de `docs/informe/`. Las extensiones son orientativas; priorizar que las tablas se lean y que se cumpla la rúbrica.
 
-Los detalles de componentes se escriben en `microservicios/<servicio>.tex`; las secciones transversales sintetizan el diseño sin repetirlo. Las fuentes se añaden al bloque de cada integrante en `referencias.bib` usando claves únicas.
+| Parte y archivo | Coordinación | Qué debe quedar escrito | Extensión orientativa |
+| --- | --- | --- | --- |
+| Encabezado — `secciones/encabezado.tex` | Equipo | Título, integrantes y grupo en la primera página. Retirar el aviso de borrador únicamente cuando se hayan cerrado los pendientes. | Un bloque compacto |
+| Contexto — `secciones/introduccion.tex` | Juliana | Indicar el sistema, los C4 de niveles 1 y 2 utilizados y dónde consultar diagrama y evidencia. Sin teoría extensa. | Un párrafo, 50–70 palabras |
+| Arquitectura — `secciones/arquitectura.tex` | Nixon y Belinda | Ordenar las cinco síntesis de las filas siguientes y comprobar que coinciden con el C4. Este archivo no incluye desarrollos completos. | Solo composición |
+| Límites y datos — `secciones/microservicios-datos.tex` | Juliana; aportes de los cuatro | Explicar SRP, base propia por servicio y ausencia de bases compartidas. Las entidades concretas van en la tabla, sin repetirlas aquí. | Hasta 50 palabras |
+| Componentes — `secciones/componentes-internos.tex` | Belinda; aportes de los cuatro | Resumir la organización interna y las dependencias relevantes. No transcribir cada componente y endpoint: deben verse en el C4 y en el desarrollo de apoyo. | Hasta 50 palabras |
+| Gateway — `secciones/api-gateway.tex` | Humberto | Entrada única web/móvil, enrutamiento, autenticación y limitación de solicitudes. Concretar el mecanismo elegido y el comportamiento frente a errores. | Hasta 50 palabras |
+| Canales sincrónicos — `secciones/comunicacion-sincronica.tex` | Humberto; validación de los responsables de ambos extremos | Identificar quién llama a quién, REST o gRPC, el motivo ligado al ID real de un RNF y qué ocurre ante fallos. Usar PE-U1 si se justifica gRPC. | Hasta 80 palabras |
+| Eventos y consistencia — `secciones/comunicacion-asincronica.tex` | Nixon; validación de productores y consumidores | Productor/consumidor, eventos, RabbitMQ o Kafka, justificación según RNF y manejo de reintentos, duplicados y consistencia. | Hasta 90 palabras |
+| Tabla de servicios — `tablas/tabla-servicios.tex` | Belinda consolida; cada estudiante completa su servicio | Responsabilidad, datos, endpoints/eventos y RF concretos. Mantener nombres coherentes entre ambos bloques. | Aproximadamente una página |
+| Retroalimentación — `tablas/retroalimentacion.tex` | Todos registran; Belinda consolida; Nixon actualiza el C4 | Una fila por observación real del docente: observación, cambio realizado y razón si no se aplicó. Referenciar el ADR cuando corresponda. | Según la revisión, sin texto repetido |
+| Cierre — `secciones/conclusiones.tex` | Humberto, con aportes de todos | Resumir el resultado y sus límites. Al terminar, reemplazar el texto de trabajo pendiente por las conclusiones verificadas. | Hasta 40 palabras |
+| Referencias — `referencias.bib` | Todos | Fuentes utilizadas, con claves únicas y citas junto a la decisión que respaldan. El PDF solo imprime las citadas. Las referencias pueden ocupar una cuarta página si es necesario. | Las necesarias para respaldar el diseño |
 
-## 4. Tabla de servicios y flujo de aportes
+No eliminar una justificación necesaria para alcanzar un número de páginas. Primero quitar repeticiones; no reducir la letra de las tablas hasta hacerlas ilegibles.
 
-Cada estudiante completa **todas las columnas de su propio servicio** en `docs/informe/tablas/aportes/aportes-<nombre>.md`: responsabilidad, datos propios, endpoints, eventos y RF cubiertos. Los RF iniciales del repositorio se conservan como punto de partida y requieren verificación.
+## 4. Flujo de trabajo de cada integrante
 
-Belinda integra los cuatro aportes en `tablas/tabla-servicios.tex` y verifica que no queden RF sin asignar ni servicios sin justificación. Los archivos Markdown son insumos manuales; no se convierten automáticamente a LaTeX. La tabla del informe se divide en dos bloques vinculados por el nombre del servicio para que sea legible.
+1. Completar su desarrollo en `microservicios/<servicio>.tex`, incluyendo el tratamiento de fallos y la consistencia de datos.
+2. Completar **todas** las columnas de su servicio en `tablas/aportes/aportes-<nombre>.md`. Estos Markdown son insumos manuales, no se convierten automáticamente a LaTeX.
+3. Preparar el diagrama parcial en `docs/diagramas/parciales/` y acordar con el otro responsable cada contrato entre servicios.
+4. Comunicar al coordinador de cada sección la síntesis, los IDs de RF/RNF y las fuentes que sustentan su propuesta. Evitar que varias personas reescriban a la vez una sección transversal.
+5. El coordinador incorpora la síntesis al informe; Belinda integra la tabla y Nixon integra el C4. Cada responsable revisa que su servicio esté representado correctamente.
+6. Compilar el informe breve y comprobar que ninguna sección haya incorporado el desarrollo extenso por error. Registrar los aportes con commits individuales.
 
-## 5. Estructura integrada
+**Atención a Reservas:** el contenido más reciente que estaba en `secciones/reservas.tex` se consolidó en `microservicios/reservas.tex`. La ruta anterior solo delega al archivo vigente; no mantener dos versiones.
+
+**Acuerdo pendiente entre Reservas y Laboratorios:** delimitar los bloqueos de agenda y los bloqueos operativos, su propiedad y cómo se propagan. Los borradores mencionan ambos; antes de entregar se debe verificar que la tabla y el C4 no atribuyan el mismo dato a dos servicios como propietarios.
+
+## 5. Revisión docente, retroalimentación y ADR
+
+La rúbrica exige una revisión de diseño de **10 minutos**. Todos deben poder explicar por qué los servicios están separados, qué ocurre si uno falla y cómo se mantiene la consistencia entre sus bases.
+
+Durante la revisión, cada integrante registra las observaciones relacionadas con su servicio. Belinda reúne las filas en `tablas/retroalimentacion.tex`. No inventar observaciones ni marcar cambios como realizados antes de implementarlos. En las observaciones aplicadas, indicar qué cambió y dejar la tercera columna como «No aplica»; en las no aplicadas, explicar el motivo en la tercera columna.
+
+Nixon integra los cambios acordados en el C4, con validación de los responsables afectados. Si una decisión cambia la arquitectura, el responsable de esa decisión crea un **nuevo ADR** en `docs/adr/`, con contexto, decisión y consecuencias; los involucrados lo revisan. La fila de retroalimentación debe enlazarlo. Si la revisión aún no se realiza, la tabla debe indicar ese estado real.
+
+## 6. Tabla y trazabilidad: revisión de Belinda y del equipo
+
+La tabla del informe usa dos bloques relacionados por el mismo nombre de servicio para conservar legibilidad. Entre ambos deben cubrir las seis columnas de la rúbrica: microservicio, responsabilidad, datos propios, endpoints, eventos y RF.
+
+Comprobar que todos los RF del PFC estén asignados y que cada servicio atienda al menos uno. La asignación inicial del catálogo se debe verificar contra la entrega 1. Para RF-14, cada servicio registra sus cambios e Información y Avisos reúne la vista central. Los RNF deben identificarse con sus IDs reales al justificar los mecanismos; no inventarlos.
+
+## 7. Estructura del trabajo
 
 ```text
 .
@@ -73,44 +90,37 @@ Belinda integra los cuatro aportes en `tablas/tabla-servicios.tex` y verifica qu
 │   └── microservicio_avisos/
 └── docs/
     ├── catalogo-microservicios.md
-    ├── evidencias/                       # Fotos fechadas individuales y grupal
+    ├── evidencias/
     ├── diagramas/
-    │   ├── reservas-crear-reserva.drawio  # Borrador existente conservado
-    │   ├── creacion-reserva.png           # Imagen existente conservada
-    │   └── parciales/                    # Un diagrama por microservicio
-    │       └── README.md
-    ├── adr/                             # Carpeta previa conservada
+    │   ├── reservas-crear-reserva.drawio
+    │   ├── creacion-reserva.png
+    │   └── parciales/
+    ├── adr/
     └── informe/
-        ├── main.tex
+        ├── main.tex                      # Entrega breve
+        ├── main-detallado.tex            # Apoyo del equipo
+        ├── preambulo.tex                 # Configuración común
         ├── referencias.bib
-        ├── secciones/                   # Secciones del informe grupal
-        ├── microservicios/              # Aportes de componentes por servicio
-        │   ├── reservas.tex
-        │   ├── identidad.tex
-        │   ├── laboratorios.tex
-        │   └── avisos.tex
-        ├── tablas/
-        │   ├── tabla-servicios.tex
-        │   └── aportes/
-        │       ├── aportes-juliana.md
-        │       ├── aportes-humberto.md
-        │       ├── aportes-belinda.md
-        │       └── aportes-nixon.md
-        └── archivo/
-            └── retroalimentacion.tex    # Plantilla previa fuera del informe actual
+        ├── secciones/                    # Síntesis; portada/anexos solo para apoyo
+        ├── microservicios/               # Desarrollos completos de los cuatro
+        └── tablas/
+            ├── tabla-servicios.tex
+            ├── retroalimentacion.tex    # Recuperada e incluida en main.tex
+            └── aportes/
+                ├── aportes-juliana.md
+                ├── aportes-humberto.md
+                ├── aportes-belinda.md
+                └── aportes-nixon.md
 ```
 
-Todos los `.tex` de la entrega están enlazados por `\input{}` desde `main.tex`, directa o indirectamente. Las imágenes pendientes usan marcadores condicionales, de modo que no bloquean la compilación. Los diagramas y fotos pendientes no se crean como archivos vacíos.
+Los cuatro servicios de `src/` mantienen sus nombres. Los diagramas y fotos existentes se conservan. Los archivos finales del C4 se incorporarán al cerrar el diseño; no crear editables o imágenes vacíos para simular entregables.
 
-El contenido existente de Reservas, la referencia bibliográfica, la portada y los RF se conservan. Los cuatro archivos por servicio antes situados directamente en `docs/informe/` se trasladaron a `docs/informe/microservicios/`. La plantilla previa de retroalimentación se conserva en `archivo/`, sin incluirla en la entrega actual.
+## 8. Entrega según la rúbrica compartida
 
-## 6. Entregables previstos
+- C4 nivel 3 integrado editable (`.drawio`) y exportación PDF o PNG en `docs/diagramas/`, con bases independientes, Gateway, componentes y canales identificados como sincrónicos/asincrónicos y sus tecnologías.
+- LaTeX breve compilado a PDF con tabla de servicios, tabla de retroalimentación y justificaciones relevantes.
+- Fotografía del bosquejo inicial **grupal** hecho a mano, con fecha visible. Los bosquejos individuales pueden conservarse como apoyo. La evidencia de Belinda ya utiliza la extensión `.jpeg`; respetar ese nombre.
+- Nuevos ADR en `docs/adr/` cuando la revisión cambie decisiones de arquitectura.
+- Versión final en el **repositorio público del PFC utilizado en la entrega 1**, como exige la rúbrica. Este repositorio del taller sirve para preparar el trabajo; publicar aquí no sustituye esa integración final.
 
-- Fotos `docs/evidencias/bosquejo-{juliana,humberto,belinda,nixon,grupal}.jpg`, con fecha visible.
-- Cuatro diagramas parciales editables, uno por microservicio; nombres y responsables en `docs/diagramas/parciales/README.md`.
-- C4 integrado: `docs/diagramas/c4-nivel-3.drawio` y `docs/diagramas/c4-nivel-3.pdf`.
-- Informe grupal LaTeX y PDF con tabla, decisiones y justificaciones tecnológicas.
-- Commits individuales de cada integrante para registrar sus aportes.
-- PDF de una página para el SGA, elaborado aparte y fuera de la carpeta del taller.
-
-No se incorpora la revisión de diseño ni nuevos ADR como requisito de esta entrega. La integración al repositorio original es opcional; la aceptación del fork como entrega queda pendiente de confirmar con el docente.
+La rúbrica compartida no exige un segundo PDF de una página para SGA. Si el docente lo solicita por otra vía, prepararlo como entregable adicional, sin confundirlo con el informe breve.
