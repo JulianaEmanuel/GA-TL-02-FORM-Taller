@@ -78,4 +78,52 @@
       </root>
     </mxGraphModel>
   </diagram>
+  <diagram id="gestionar-reservas-propias" name="Consulta y cancelación">
+    <mxGraphModel page="1" pageWidth="1000" pageHeight="580" grid="1">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="gateway" value="API Gateway" vertex="1" parent="1"><mxGeometry x="25" y="140" width="115" height="55" as="geometry"/></mxCell>
+        <mxCell id="scope" value="Reservas y Agenda" style="swimlane;startSize=34;" vertex="1" parent="1"><mxGeometry x="245" y="55" width="715" height="385" as="geometry"/></mxCell>
+        <mxCell id="api" value="API de reservas" vertex="1" parent="scope"><mxGeometry x="30" y="85" width="130" height="55" as="geometry"/></mxCell>
+        <mxCell id="gestor" value="Gestor de reservas" vertex="1" parent="scope"><mxGeometry x="280" y="85" width="145" height="55" as="geometry"/></mxCell>
+        <mxCell id="db" value="BD propia de Agenda" style="shape=cylinder3;whiteSpace=wrap;" vertex="1" parent="scope"><mxGeometry x="560" y="75" width="135" height="75" as="geometry"/></mxCell>
+        <mxCell id="access" value="REST síncrono" style="html=1;" edge="1" parent="1" source="gateway" target="api"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="delegate" value="Identidad y operación" style="html=1;" edge="1" parent="scope" source="api" target="gestor"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="persist" value="Consulta o cancela" style="html=1;" edge="1" parent="scope" source="gestor" target="db"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="notes" value="RF-05&lt;br&gt;GET /api/reservas/mias · Filtra por el docente autenticado.&lt;br&gt;POST /api/reservas/{id}/cancelacion · Recibe el motivo.&lt;br&gt;Para cancelar, verifica propietario y estado pendiente o confirmado.&lt;br&gt;Cambia el estado y registra el motivo en la misma transacción." style="text;html=1;whiteSpace=wrap;align=left;fontSize=14;" vertex="1" parent="scope"><mxGeometry x="30" y="185" width="650" height="125" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="bloqueos-agenda" name="Bloqueos de agenda">
+    <mxGraphModel page="1" pageWidth="1040" pageHeight="475" grid="1">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="gateway" value="API Gateway" vertex="1" parent="1" style="html=1;whiteSpace=wrap;"><mxGeometry x="25" y="135" width="130" height="55" as="geometry"/></mxCell>
+        <mxCell id="scope" value="Reservas y Agenda" vertex="1" parent="1" style="swimlane;startSize=32;html=1;whiteSpace=wrap;"><mxGeometry x="220" y="55" width="800" height="345" as="geometry"/></mxCell>
+        <mxCell id="api" value="API de agenda" vertex="1" parent="scope" style="html=1;whiteSpace=wrap;"><mxGeometry x="35" y="80" width="130" height="55" as="geometry"/></mxCell>
+        <mxCell id="handler" value="Gestor de bloqueos" vertex="1" parent="scope" style="html=1;whiteSpace=wrap;"><mxGeometry x="300" y="80" width="155" height="55" as="geometry"/></mxCell>
+        <mxCell id="db" value="BD propia de Agenda" vertex="1" parent="scope" style="shape=cylinder3;html=1;whiteSpace=wrap;"><mxGeometry x="635" y="73" width="140" height="70" as="geometry"/></mxCell>
+        <mxCell id="note" value="&lt;b&gt;POST /api/agenda/bloqueos&lt;/b&gt;&lt;br&gt;RF-11. Verifica el permiso del administrador y valida el intervalo.&lt;br&gt;Usa el mismo bloqueo por laboratorio que la creación de reservas.&lt;br&gt;Al confirmar la transacción, la franja deja de ofrecerse para nuevas reservas." vertex="1" parent="scope" style="text;align=left;spacing=6;html=1;whiteSpace=wrap;"><mxGeometry x="35" y="170" width="720" height="125" as="geometry"/></mxCell>
+        <mxCell id="e0" value="REST síncrono" edge="1" parent="1" source="gateway" target="api" style="html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e1" value="Valida y delega" edge="1" parent="scope" source="api" target="handler" style="html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" value="Registra el bloqueo" edge="1" parent="scope" source="handler" target="db" style="html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="asistencia-reserva" name="Registro de asistencia">
+    <mxGraphModel page="1" pageWidth="1040" pageHeight="475" grid="1">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="gateway" value="API Gateway" vertex="1" parent="1" style="html=1;whiteSpace=wrap;"><mxGeometry x="25" y="135" width="130" height="55" as="geometry"/></mxCell>
+        <mxCell id="scope" value="Reservas y Agenda" vertex="1" parent="1" style="swimlane;startSize=32;html=1;whiteSpace=wrap;"><mxGeometry x="220" y="55" width="800" height="345" as="geometry"/></mxCell>
+        <mxCell id="api" value="API de agenda" vertex="1" parent="scope" style="html=1;whiteSpace=wrap;"><mxGeometry x="35" y="80" width="130" height="55" as="geometry"/></mxCell>
+        <mxCell id="handler" value="Registro de asistencia" vertex="1" parent="scope" style="html=1;whiteSpace=wrap;"><mxGeometry x="300" y="80" width="155" height="55" as="geometry"/></mxCell>
+        <mxCell id="db" value="BD propia de Agenda" vertex="1" parent="scope" style="shape=cylinder3;html=1;whiteSpace=wrap;"><mxGeometry x="635" y="73" width="140" height="70" as="geometry"/></mxCell>
+        <mxCell id="note" value="&lt;b&gt;POST /api/reservas/{id}/asistencia&lt;/b&gt;&lt;br&gt;RF-12. Verifica el permiso del encargado y que la reserva esté confirmada.&lt;br&gt;Vincula cada presencia o ausencia con el participante y la reserva." vertex="1" parent="scope" style="text;align=left;spacing=6;html=1;whiteSpace=wrap;"><mxGeometry x="35" y="170" width="720" height="125" as="geometry"/></mxCell>
+        <mxCell id="e0" value="REST síncrono" edge="1" parent="1" source="gateway" target="api" style="html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e1" value="Valida y delega" edge="1" parent="scope" source="api" target="handler" style="html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" value="Consulta y registra asistencia" edge="1" parent="scope" source="handler" target="db" style="html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
 </mxfile>
