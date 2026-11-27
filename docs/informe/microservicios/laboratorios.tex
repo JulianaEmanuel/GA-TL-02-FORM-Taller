@@ -1,2 +1,185 @@
-\subsubsection{Laboratorios y Recursos \hfill Belinda Toaquiza}
-\pendiente{Describir los componentes de catálogo, inventario y seguimiento de fallas, y los datos propios del servicio.}
+\subsection{Microservicio de Laboratorios y Recursos}
+\label{subsec:laboratorios-recursos}
+
+\subsubsection{Alcance y responsabilidad}
+
+El microservicio de Laboratorios y Recursos administra el catálogo de
+laboratorios, los equipos asignados a cada espacio y las restricciones
+operativas que afectan su uso. Su motivo principal de cambio es la
+evolución de las reglas de administración de los recursos físicos. Para
+delimitarlo se revisaron las funcionalidades y dependencias presentes
+en el código de CLAB, siguiendo el criterio de identificar servicios a
+partir del dominio y de la aplicación existente
+\cite{abgaz2023decomposition,oumoussa2024evolution}.
+
+El alcance incluye la gestión de laboratorios, equipos, tipos de
+equipo, bloqueos, asignaciones de encargados y referencias a
+fotografías. También comprende la consulta de las condiciones
+operativas de un laboratorio para un intervalo de fechas.
+
+Reservas y Agenda administra las solicitudes, los horarios reservados
+y el estado de cada reserva. Para determinar si se puede reservar un
+espacio, combina la información operativa de Laboratorios y Recursos
+con la ocupación de su propia agenda. El servicio responsable de
+identidad administra las cuentas y los roles. El registro y seguimiento
+de reportes de fallas se mantiene en el módulo de reportes, mientras
+que Laboratorios y Recursos administra el estado operativo del equipo.
+
+\subsubsection{Propiedad y almacenamiento de datos}
+
+El microservicio dispone de una base de datos PostgreSQL propia.
+PostgreSQL conserva el motor empleado por CLAB y permite aplicar
+integridad referencial a las relaciones locales entre laboratorios,
+equipos, bloqueos y asignaciones. El modelo propuesto se organiza de
+la siguiente manera.
+
+\begin{itemize}
+    \item \textbf{Laboratorio.} Registra nombre, ubicación, capacidad,
+    descripción, estado operativo e identificador de sede.
+    \item \textbf{Equipo y tipo de equipo.} Cada equipo pertenece a un
+    laboratorio y a un tipo. El inventario registra su número de
+    serie, características, ubicación física y estado.
+    \item \textbf{Bloqueo de laboratorio y tipo de bloqueo.} Cada
+    bloqueo registra el laboratorio, el tipo, el motivo, las fechas
+    de inicio y fin, el estado y el identificador del usuario que lo
+    registró. Se verifica que la fecha de fin sea igual o posterior a
+    la fecha de inicio.
+    \item \textbf{Asignación de encargado.} Vincula un laboratorio
+    con el identificador de un usuario y conserva la fecha y vigencia
+    de la asignación.
+    \item \textbf{Referencia de fotografía.} Vincula un laboratorio o
+    equipo con la referencia de su imagen. La base de datos guarda la
+    asociación y el almacenamiento de imágenes conserva el archivo.
+\end{itemize}
+
+Los identificadores de usuario y sede se guardan como referencias
+externas. Las claves foráneas se aplican a las entidades de la base
+propia. El total de equipos se obtiene del inventario para evitar
+discrepancias con las altas y bajas. Las reservas afectadas por un
+bloqueo y las acciones tomadas sobre ellas se registran en la base
+de Reservas y Agenda.
+
+\subsubsection{Componentes internos}
+
+El diseño de nivel 3 del modelo C4 descompone el microservicio en
+componentes con responsabilidades diferenciadas. Los componentes de
+aplicación ejecutan las reglas de cada área y delegan el acceso a
+PostgreSQL en los repositorios de persistencia.
+
+\begin{description}
+    \item[API de Laboratorios y Recursos.]
+    Recibe solicitudes del API Gateway y llamadas internas de
+    Reservas y Agenda. Valida la estructura de las entradas y dirige
+    cada operación al componente correspondiente.
+
+    \item[Gestión de laboratorios.]
+    Administra el catálogo y las asignaciones de encargados. Utiliza
+    un cliente del servicio de identidad para comprobar que el usuario
+    puede ser asignado como encargado.
+
+    \item[Gestión de inventario.]
+    Administra los equipos, sus tipos y sus estados. Verifica que el
+    laboratorio y el tipo de equipo existan antes de registrar el
+    equipo.
+
+    \item[Gestión de bloqueos.]
+    Registra, modifica y levanta restricciones de uso. En la misma
+    transacción que cambia un bloqueo, registra en la base local el
+    evento pendiente de publicación.
+
+    \item[Consulta de condiciones operativas.]
+    Lee el estado del laboratorio y los bloqueos activos que se
+    solapan con el intervalo solicitado. Devuelve las condiciones del
+    espacio para que Reservas y Agenda las combine con su ocupación.
+
+    \item[Gestión de fotografías.]
+    Mantiene la asociación entre las referencias de imágenes y los
+    laboratorios o equipos registrados.
+
+    \item[Repositorios de persistencia.]
+    Ejecutan las consultas y escrituras sobre la base PostgreSQL
+    propia del microservicio.
+
+    \item[Publicador de eventos.]
+    Lee los eventos pendientes y los envía a RabbitMQ. Marca cada
+    evento como publicado después de recibir la confirmación del
+    intermediario y reintenta los envíos pendientes.
+\end{description}
+
+\subsubsection{Mecanismos de comunicación}
+
+\paragraph{Canales sincrónicos.}
+Los clientes web y móvil ingresan por el API Gateway, que centraliza
+la autenticación, el enrutamiento y la limitación de solicitudes. El
+Gateway se comunica con la API mediante REST sobre HTTPS. Reservas y
+Agenda utiliza una llamada REST interna para consultar las condiciones
+operativas del laboratorio. Laboratorios y Recursos consulta al
+servicio de identidad por REST cuando debe validar una asignación de
+encargado.
+
+REST permite obtener una respuesta en la misma interacción y aprovecha
+el estilo de API que ya utiliza CLAB. Si falla la consulta de las
+condiciones operativas, Reservas y Agenda pospone la confirmación y
+puede reintentarla. Si falla la validación de identidad, la asignación
+del encargado se mantiene pendiente de ejecución.
+
+\paragraph{Operaciones principales.}
+La Tabla~\ref{tab:laboratorios-operaciones} resume las rutas propuestas
+para el diseño del taller.
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Operaciones principales de Laboratorios y Recursos}
+    \label{tab:laboratorios-operaciones}
+    \begin{tabular}{p{0.15\linewidth}p{0.38\linewidth}p{0.37\linewidth}}
+        \hline
+        \textbf{Método} & \textbf{Ruta} & \textbf{Operación} \\
+        \hline
+        GET, POST & \texttt{/laboratorios} &
+        Listar o registrar laboratorios. \\
+        GET, PATCH & \texttt{/laboratorios/\{id\}} &
+        Consultar o actualizar un laboratorio. \\
+        GET, POST & \texttt{/equipos} &
+        Consultar el inventario o registrar un equipo. \\
+        PATCH & \texttt{/equipos/\{id\}} &
+        Actualizar los datos o el estado de un equipo. \\
+        GET, POST & \texttt{/bloqueos} &
+        Consultar o registrar bloqueos. \\
+        PATCH & \texttt{/bloqueos/\{id\}} &
+        Modificar o levantar un bloqueo. \\
+        GET & \texttt{/laboratorios/\{id\}/}\newline
+        \texttt{condiciones-operativas} &
+        Consultar el estado y los bloqueos para las fechas indicadas. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+La consulta interna de condiciones operativas recibe las fechas de
+inicio y fin y devuelve el estado del laboratorio y las restricciones
+aplicables. Reservas y Agenda conserva la decisión de confirmar la
+reserva según esas condiciones y la ocupación de su agenda.
+
+\paragraph{Canal asincrónico.}
+RabbitMQ distribuye a Reservas y Agenda los eventos
+\texttt{BloqueoLaboratorioRegistrado},
+\texttt{BloqueoLaboratorioModificado} y
+\texttt{BloqueoLaboratorioLevantado}. Cada evento incluye un
+identificador único, el identificador del laboratorio y del bloqueo,
+el intervalo de fechas, el estado y la versión del bloqueo. En esta
+versión del diseño, Laboratorios y Recursos actúa como productor de
+eventos y Reservas y Agenda como consumidor.
+
+El registro local de eventos pendientes permite conservar el cambio
+y publicar el aviso cuando RabbitMQ vuelva a estar disponible.
+Reservas y Agenda procesa cada identificador de evento una sola vez
+a nivel lógico y utiliza la versión del bloqueo para descartar
+actualizaciones anteriores. Al recibir el evento, reevalúa las
+reservas afectadas y registra las acciones en su propia base de datos.
+
+La consulta sincrónica y la publicación asincrónica permiten que
+ambos servicios mantengan sus datos separados. Puede existir un
+intervalo entre el registro del bloqueo y su procesamiento por
+Reservas y Agenda. Si una reserva se confirma durante ese intervalo,
+el evento posterior activa su reevaluación. Este diseño ofrece
+consistencia eventual entre ambos servicios.
