@@ -85,7 +85,8 @@ Los clientes web y móvil ingresan por el API Gateway. El inicio de sesión
 necesita una respuesta inmediata con el token o el rechazo, por lo que usa
 REST. El Gateway valida la firma y la vigencia del JWT en cada solicitud y
 envía a los servicios el usuario, el rol y los permisos; por eso Reservas y
-Agenda no consulta a este servicio en cada operación. Este esquema sigue los
+Agenda solo consulta a este servicio para verificar la sesión antes de
+confirmar, cancelar o bloquear. Este esquema sigue los
 patrones de token de acceso e identidad y de autorización en el borde, en los
 que el Gateway concentra la autenticación de las solicitudes
 \cite{waseem2022decision,haindl2024interservice}. Laboratorios y Recursos
@@ -106,21 +107,28 @@ guardar la asignación.
     \item[Consulta interna.] \texttt{GET /usuarios/\{id\}/roles}. Devuelve
     el estado y los roles de un usuario para validar a un encargado de
     laboratorio.
+        \item[Consulta interna.] \texttt{GET /usuarios/\{id\}/roles}. Devuelve
+    el estado y los roles de un usuario para validar a un encargado de
+    laboratorio.
+    \item[Verificación de sesión.] \texttt{GET /auth/sesiones/vigente}.
+    Confirma que la sesión no se ha revocado antes de confirmar, cancelar
+    o bloquear (RNF-03).
 \end{description}
 
 \paragraph{RabbitMQ sobre AMQP, asincrónico.}
 El servicio publica los eventos \texttt{UsuarioDesactivado},
-\texttt{RolUsuarioModificado} y \texttt{PeriodoAcademicoCerrado}, además de
-los registros de auditoría. Cada evento incluye su identificador, el
+\texttt{RolUsuarioModificado}, \texttt{AcademicoActualizado},
+\texttt{PeriodoAcademicoCerrado} y \texttt{AccionAuditada}. Cada evento incluye su identificador, el
 identificador del recurso afectado, el usuario responsable y la fecha.
 Información y Avisos los consume para notificar a los afectados y para la
 consulta central de auditoría. El servicio no consume eventos.
 
 \subsubsection{Fallos y consistencia}
 
-Si el servicio no responde, los tokens ya emitidos siguen siendo válidos
-hasta su vencimiento, porque el Gateway los valida sin consultarlo; las
-operaciones en curso de los demás servicios continúan. Fallan los nuevos
+Si el servicio no responde, las consultas con un token vigente continúan,
+pero las confirmaciones, cancelaciones y bloqueos no se ejecutan, porque
+no puede verificarse que la sesión siga activa (RNF-03). Fallan los nuevos
+inicios de sesión y la asignación de encargados, que queda sin guardarse. Fallan los nuevos
 inicios de sesión y la asignación de encargados, que queda sin guardarse.
 Un cambio de rol se aplica en el siguiente token emitido; el vencimiento
 corto del JWT limita el tiempo en que un permiso retirado sigue vigente.
