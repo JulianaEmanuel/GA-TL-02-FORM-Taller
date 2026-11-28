@@ -1,2 +1,126 @@
 \subsection{Información y Avisos \hfill Nixon Piguave}
-\pendiente{Describir los componentes de reportes, avisos y consulta central de auditoría, y los datos que mantiene el servicio.}
+\label{subsec:avisos-nixon}
+
+\subsubsection{Alcance y responsabilidad}
+El servicio produce información derivada de CLAB para consulta: reportes
+de uso (RF-13), avisos internos (RF-15) y vista central de auditoría
+(RF-14). Agrupa módulos que comparten proyecciones y recuperación de
+resultados; no cambia la ocupación de Agenda, los permisos de Identidad ni
+el estado técnico de Laboratorios. Su motivo de cambio son las reglas para
+presentar, distribuir y actualizar esos resultados. Si sus módulos
+necesitaran ciclos de despliegue o escalado distintos, se revisaría este
+límite en otro ADR.
+
+\subsubsection{Datos de propiedad exclusiva}
+La base PostgreSQL \texttt{clab\_avisos} contiene proyecciones de reservas,
+asistencia, laboratorios, incidencias y catálogos académicos; notificaciones,
+destinatarios y estados de lectura; copias centrales de auditoría; auditoría
+local, inbox, estado de sincronización y outbox. Cada servicio conserva
+su base y credencial propias. No existen claves foráneas ni consultas SQL
+entre servicios. Los identificadores externos son referencias lógicas.
+
+Las proyecciones no sustituyen la verdad transaccional. El reporte conserva
+la instantánea de carrera, asignatura y periodo asociada a la reserva para
+que un cambio posterior del catálogo no altere su significado histórico.
+No se copian contraseñas ni tokens. El estado de permisos proyectado no se
+utiliza para autorizar solicitudes.
+
+\subsubsection{Componentes internos}
+La vista C3 descompone un contenedor por página, siguiendo el modelo
+C4\cite{brownC4Componentes}. La página de Información y Avisos contiene:
+\begin{description}
+\item[API REST y control de acceso.] Valida filtros, identidad y permiso
+vigente; dirige la solicitud al módulo adecuado y restringe los avisos al
+destinatario autenticado.
+\item[Consultas de uso y exportación.] Consulta proyecciones locales por
+carrera y periodo; entrega vista paginada o CSV y la marca de actualización.
+Distingue horas reservadas de asistencia realmente registrada.
+\item[Gestión de avisos.] Lista avisos por destinatario y actualiza su
+lectura idempotente. Guarda auditoría local y outbox en la misma transacción.
+\item[Consulta de auditoría.] Recupera las copias centrales por usuario,
+origen e intervalo. No modifica las acciones de los servicios fuente.
+\item[Consumidores y proyector.] Validan el esquema del evento,
+deduplican por consumidor e identificador y actualizan proyección, aviso o
+auditoría en una transacción local. Dan ACK después del commit.
+\item[Repositorios.] Acceden exclusivamente a la base propia, incluidos
+inbox, versiones y marcas de sincronización.
+\item[Publicador de outbox.] Publica las acciones locales pendientes con
+confirmación; no vuelve a emitir eventos consumidos, evitando bucles.
+\end{description}
+
+\subsubsection{API y canales sincrónicos}
+Los clientes web y móvil acceden por el Gateway. Se proponen estas operaciones:
+\begin{itemize}
+\item \texttt{GET /api/reportes/uso}.
+\item \texttt{GET /api/reportes/uso/exportacion}.
+\item \texttt{GET /api/notificaciones}.
+\item \texttt{PATCH /api/notificaciones/\{id\}/lectura}.
+\item \texttt{GET /api/auditoria}.
+\end{itemize}
+La API usa REST/JSON sobre HTTPS porque
+el usuario necesita el resultado inmediato y el PFC ya utiliza HTTP/JSON.
+No se dispone de mediciones auténticas de PE-U1 para justificar gRPC.
+
+Gateway valida el token y enruta; el servicio comprueba autorización vigente
+en Identidad por REST y aplica el control del recurso. Un JWT todavía
+vigente no acredita por sí solo que la sesión o el permiso no fueron
+revocados. Se conserva el fallo cerrado de RNF-03 y ADR-001: Identidad
+inaccesible produce HTTP 503, sin ejecutar operaciones protegidas. El
+timeout total de 800 ms para esta comprobación desde Avisos es un presupuesto
+propuesto, no un resultado medido ni un presupuesto para Agenda.
+
+\subsubsection{Eventos y mecanismo asincrónico}
+Se propone RabbitMQ, exchange topic durable \texttt{clab.eventos.v1},
+AMQP/TLS y tres colas durables independientes para proyecciones,
+notificaciones y auditoría. Reservas publica confirmaciones, cancelaciones,
+conflictos, asistencia y cambios de bloqueo efectivo; Laboratorios,
+catálogo, equipos e incidencias; Identidad, cambios académicos y avisos de
+cuenta. Todos publican sus acciones auditadas. Avisos produce únicamente
+las acciones de sus propias mutaciones. Los payloads y productores deben
+validarse entre responsables.
+
+Cada origen guarda negocio, auditoría local y outbox en una transacción.
+La publicación posterior emplea mensaje persistente, publisher confirms y
+la opción \texttt{mandatory}; un mensaje devuelto sin ruta no se marca
+entregado. Los confirms acreditan recepción por el broker, no finalización
+del consumidor\cite{nixonRabbitConfirms}. El flujo de negocio no espera a
+que Avisos procese el cambio. RNF-06 exige continuidad con Avisos caído y
+RNF-07 conserva la auditoría fuente\cite{nixonPfcRNF}. RNF-05 permite
+instalar los componentes en la institución sin nube pública obligatoria.
+
+ADR-003 registra esta evolución porque ADR-002 proponía consulta periódica
+de cambios mediante REST\cite{nixonPfcADR002}. Kafka sigue siendo una
+alternativa de registro retenido; los requisitos revisados no aportan carga
+ni reproducción de historial que obliguen a elegirlo. No se afirma una
+ventaja experimental de RabbitMQ ni cumplimiento medido de RNF-01/02.
+
+\subsubsection{Fallos, consistencia y recuperación}
+La entrega es al menos una vez. Inbox y efectos se guardan juntos; si se
+pierde el ACK, la reentrega se deduplica. Las proyecciones usan instantáneas
+completas y versión por agregado, de modo que una versión vieja no revierte
+una nueva. Auditoría y avisos conservan cada acción única aunque llegue
+fuera de orden. No existe orden global entre servicios.
+
+Los errores transitorios tienen reintentos acotados; al quinto fallo se
+conserva una copia en la cola de errores antes de dar ACK al original.
+Si falla esa copia, no se confirma el original. No se utiliza reencolado
+infinito. El detalle de recuperación complementa los mecanismos de errores
+del broker\cite{nixonRabbitDLX}.
+
+Si Avisos o RabbitMQ fallan, los orígenes acumulan cambios mientras exista
+capacidad; se supervisan disco y backlog. Los reportes muestran la última
+marca de agua por origen verificada con un manifiesto de eventos relevantes
+por consumidor; no confunden un salto de secuencia por filtrado con pérdida.
+Sin reconciliar, indican sincronización no verificada. Si la base local
+no responde, se devuelve 503; una proyección no inicializada no aparenta un
+reporte vacío. La reconstrucción exige instantáneas consistentes con
+secuencia de corte y cambios retenidos; auditoría necesita el archivo de
+acciones completo. Retención inicial propuesta: al menos siete días,
+supeditada a respaldo y cursores confirmados, con reconciliación si se supera.
+
+La mensajería no establece el bloqueo de agenda: Reservas conserva su
+autoridad y el protocolo I13 coordina la barrera operativa antes de anunciar
+el cierre del catálogo. Estos contratos, la retención y los detalles de
+autorización se presentan para validar con el equipo. Los escenarios de
+caída, duplicación, revocación, orden y restauración están documentados en
+\path{docs/contratos/eventos-nixon.md}; todavía no se ejecutaron.

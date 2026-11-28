@@ -1,10 +1,10 @@
-% Nixon consolida. Máximo orientativo: 90 palabras. Confirmar RNF con el equipo.
+% Aporte de Nixon. Propuesta para validar con productores y consumidores.
 \paragraph{Eventos y consistencia.}
-Laboratorios propone RabbitMQ para notificar a Reservas el registro,
-modificación o levantamiento de bloqueos. El cambio y el evento pendiente se
-guardan en una transacción local; un publicador reintenta el envío.
-Reservas descarta duplicados y versiones anteriores y reevalúa las reservas
-afectadas. La consistencia es eventual: un bloqueo puede provocar una
-reevaluación posterior a la confirmación. Esto desacopla la actualización
-de la disponibilidad del consumidor; \faltante{queda pendiente justificar RabbitMQ
-frente a las alternativas según los RNF del PFC.}
+Reservas, Laboratorios e Identidad publican cambios en RabbitMQ; Información
+y Avisos actualiza proyecciones, avisos y auditoría. Cada origen guarda
+negocio, auditoría y outbox juntos; publica después. El consumidor deduplica
+por evento y confirma tras guardar sus efectos. Los reintentos son acotados
+y los errores se conservan para revisión. Esto desacopla Avisos de Agenda
+(RNF-06) y preserva auditoría local (RNF-07). AMQP/TLS y despliegue
+institucional atienden RNF-05. ADR-003 propone sustituir el sondeo REST de
+ADR-002; contratos y retención requieren validación\cite{nixonRabbitConfirms,nixonPfcRNF}.
