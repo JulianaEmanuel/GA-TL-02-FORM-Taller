@@ -1,6 +1,7 @@
 % Humberto consolida. Máximo orientativo: 50 palabras.
 \paragraph{API Gateway.}
-Se propone una entrada única para clientes web y móvil, con enrutamiento,
-autenticación y limitación de solicitudes. El Gateway dirige cada operación
-al servicio propietario. \faltante{Quedan por concretar el mecanismo de autenticación,
-los límites y el tratamiento de errores con los responsables de los servicios.}
+Entrada única para clientes web y móvil. Valida la firma y vigencia del JWT
+emitido por Identidad y Académico, enruta cada solicitud al servicio
+propietario y limita las solicitudes por usuario~\cite{haindl2024interservice}.
+Responde 401 ante un token inválido, 429 al superar el límite y 503 si el
+servicio destino no responde.
