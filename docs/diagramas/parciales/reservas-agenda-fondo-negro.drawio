@@ -1,0 +1,123 @@
+<mxfile>
+  <diagram id="reservas-agenda" name="Reservas y Agenda">
+    <mxGraphModel page="1" pageWidth="1350" pageHeight="650" background="#141414">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="scope" value="Reservas y Agenda" style="fillColor=none;strokeColor=#bbbbbb;fontColor=#eeeeee;pointerEvents=0;verticalAlign=top;align=center;spacingTop=10;fontSize=21;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="250" y="142" width="1040" height="458" />
+        </mxCell>
+        <mxCell id="gateway" value="API Gateway" style="whiteSpace=wrap;html=1;fillColor=#181818;strokeColor=#bbbbbb;fontSize=17;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="24" y="275" width="130" height="60" />
+        </mxCell>
+        <mxCell id="api" value="API de reservas" style="whiteSpace=wrap;html=1;fillColor=#181818;strokeColor=#bbbbbb;fontSize=17;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="292" y="275" width="150" height="60" />
+        </mxCell>
+        <mxCell id="gestor" value="Gestor de reservas" style="whiteSpace=wrap;html=1;fillColor=#181818;strokeColor=#bbbbbb;fontSize=17;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="540" y="275" width="160" height="60" />
+        </mxCell>
+        <mxCell id="agenda" value="Control de agenda" style="whiteSpace=wrap;html=1;fillColor=#181818;strokeColor=#bbbbbb;fontSize=17;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="800" y="275" width="160" height="60" />
+        </mxCell>
+        <mxCell id="labs" value="Laboratorios y Recursos" style="whiteSpace=wrap;html=1;fillColor=#181818;strokeColor=#bbbbbb;fontSize=17;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="810" y="52" width="240" height="60" />
+        </mxCell>
+        <mxCell id="bloqueos" value="Gestor de bloqueos" style="whiteSpace=wrap;html=1;fillColor=#181818;strokeColor=#bbbbbb;fontSize=17;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="540" y="395" width="160" height="60" />
+        </mxCell>
+        <mxCell id="asistencia" value="Registro de asistencia" style="whiteSpace=wrap;html=1;fillColor=#181818;strokeColor=#bbbbbb;fontSize=17;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="540" y="510" width="160" height="60" />
+        </mxCell>
+        <mxCell id="bd" value="BD propia de Agenda" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#181818;strokeColor=#bbbbbb;fontSize=17;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="1080" y="380" width="180" height="100" />
+        </mxCell>
+        <mxCell id="e0" parent="1" edge="1" source="gateway" target="api" style="endArrow=block;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label0" value="REST síncrono" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;pointerEvents=0;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="123" y="277" width="200" height="20" />
+        </mxCell>
+        <mxCell id="e1" parent="1" edge="1" source="api" target="gestor" style="endArrow=block;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e2" parent="1" edge="1" source="gestor" target="agenda" style="endArrow=block;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.5;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="e3" parent="1" edge="1" source="api" target="agenda" style="endArrow=block;exitX=0.4866666666666667;exitY=0.0;entryX=0.5;entryY=0.0;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="365" y="210" />
+              <mxPoint x="880" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label3" value="Consulta disponibilidad" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;pointerEvents=0;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="661" y="183" width="200" height="20" />
+        </mxCell>
+        <mxCell id="e4" parent="1" edge="1" source="gestor" target="labs" style="endArrow=block;exitX=0.5;exitY=0.0;entryX=0.0;entryY=0.5;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="620" y="82" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label4" value="REST síncrono" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;pointerEvents=0;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="620" y="54" width="200" height="20" />
+        </mxCell>
+        <mxCell id="e5" parent="1" edge="1" source="agenda" target="bd" style="endArrow=block;exitX=1.0;exitY=0.5;entryX=0.5;entryY=0.0;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1170" y="305" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label5" value="Verifica y guarda" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;pointerEvents=0;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="962" y="277" width="200" height="20" />
+        </mxCell>
+        <mxCell id="e6" parent="1" edge="1" source="api" target="bloqueos" style="endArrow=block;exitX=0.49333333333333335;exitY=1.0;entryX=0.0;entryY=0.5;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="366" y="425" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" parent="1" edge="1" source="api" target="asistencia" style="endArrow=block;exitX=0.49333333333333335;exitY=1.0;entryX=0.0;entryY=0.5;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="366" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" parent="1" edge="1" source="bloqueos" target="bd" style="endArrow=block;exitX=1.0;exitY=0.5;entryX=0.0;entryY=0.45;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label8" value="Registra bloqueo" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;pointerEvents=0;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="795" y="398" width="200" height="20" />
+        </mxCell>
+        <mxCell id="e9" parent="1" edge="1" source="asistencia" target="bd" style="endArrow=block;exitX=1.0;exitY=0.5;entryX=0.5;entryY=1.0;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1170" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label9" value="Guarda asistencia" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;pointerEvents=0;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="795" y="513" width="200" height="20" />
+        </mxCell>
+        <mxCell id="e10" parent="1" edge="1" source="gestor" target="bd" style="endArrow=block;exitX=1.0;exitY=0.7833333333333333;entryX=0.0;entryY=0.15;strokeColor=#eeeeee;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="744" y="322" />
+              <mxPoint x="744" y="361" />
+              <mxPoint x="1040" y="361" />
+              <mxPoint x="1040" y="395" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label10" value="Consulta y cancela" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;pointerEvents=0;fontColor=#eeeeee;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="797" y="338" width="200" height="20" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

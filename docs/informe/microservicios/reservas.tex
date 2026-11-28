@@ -1,8 +1,34 @@
-\subsection{Reservas y Agenda \hfill Juliana Emanuel}
+\subsection{Microservicio de Reservas y Agenda}
 
-\faltante{Alcance del borrador.} Este flujo cubre la creación de una reserva
+\subsubsection{Alcance y responsabilidad}
+Reservas y Agenda controla la ocupación de cada laboratorio por franja
+horaria. Permite consultar la disponibilidad (RF-04), crear, consultar y
+cancelar reservas propias (RF-05), detectar cruces y ofrecer alternativas
+(RF-06), aplicar bloqueos efectivos en la agenda (RF-11) y registrar
+asistencia a reservas confirmadas (RF-12). Laboratorios y Recursos
+administra el catálogo y las restricciones operativas del laboratorio.
+Identidad y Académico administra las cuentas y los permisos.
+
+\subsubsection{Propiedad de datos}
+La base de Agenda conserva las reservas y sus estados, las cancelaciones
+con su motivo y usuario, los intervalos bloqueados y el registro de presencia
+o ausencia de los participantes. Cada registro de asistencia y cancelación
+se vincula con una reserva de la misma base. Agenda guarda identificadores de
+laboratorio y usuario para referirse a datos administrados por otros servicios.
+
+\subsubsection{Componentes internos}
+La API de reservas recibe las solicitudes del Gateway. El Gestor de reservas
+coordina la creación, la consulta de reservas propias y la cancelación. El
+Control de agenda consulta las franjas y comprueba cruces. El Gestor de
+bloqueos registra las restricciones efectivas y el Registro de asistencia
+vincula cada presencia o ausencia con una reserva confirmada. Estos
+componentes y sus dependencias se representan en la vista de nivel 3 del
+modelo C4~\cite{brownC4Componentes}.
+
+\subsubsection{Creación de una reserva}
+Este flujo cubre la creación de una reserva
 (RF-05) y la detección de conflictos de horario (RF-06).
-La vista sigue el nivel de componentes del modelo C4~\cite{brownC4Componentes}.
+
 
 \begin{itemize}
   \item \textbf{API de reservas.} Recibe la operación propuesta
@@ -69,3 +95,29 @@ recibe el identificador del participante y su estado de presencia o
 ausencia. El componente de asistencia comprueba el permiso del encargado
 y que la reserva esté confirmada. Luego registra la asistencia en Agenda,
 vinculada a la reserva y al participante (RF-12).
+
+\subsubsection{Mecanismos de comunicación}
+\paragraph{REST sobre HTTPS, síncrono.}
+El Gateway remite la solicitud con el contexto de identidad autenticado.
+Agenda verifica los permisos de la operación y, cuando corresponde, que la
+reserva pertenezca al docente. Para validar una franja, consulta el estado
+y las restricciones de Laboratorios mediante
+\path{GET /laboratorios/{id}/condiciones-operativas}. La consulta es síncrona
+porque la confirmación necesita conocer el resultado antes de continuar.
+
+\paragraph{RabbitMQ sobre AMQP, asíncrono.}
+El contrato propuesto por Información y Avisos contempla que Agenda
+publique la confirmación, la cancelación, los conflictos detectados,
+el registro de asistencia y los cambios de bloqueo efectivo. La
+publicación posterior mediante un registro local de eventos permite
+procesar avisos y reportes fuera de la operación de reserva. Las
+notificaciones operativas de Laboratorios y los eventos de bloqueo
+efectivo de Agenda se deben conciliar con Belinda y Nixon.
+
+\subsubsection{Fallos y consistencia}
+Si Laboratorios no responde, Agenda pospone la confirmación. El bloqueo
+transaccional por laboratorio evita que dos escrituras concurrentes en
+Agenda ocupen la misma franja. Como la consulta a Laboratorios y la
+escritura en Agenda ocurren en servicios distintos, queda por acordar
+el protocolo de cierre por mantenimiento y qué ocurre con las reservas
+ya confirmadas.
