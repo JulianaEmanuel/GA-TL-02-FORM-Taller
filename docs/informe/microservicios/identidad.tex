@@ -1,2 +1,129 @@
-\subsection{Identidad y Académico \hfill Humberto Herrera}
-\pendiente{Describir los componentes de acceso, permisos y gestión académica, y los datos propios del servicio.}
+\subsection{Microservicio de Identidad y Académico}
+\label{subsec:identidad-academico}
+
+\subsubsection{Alcance y responsabilidad}
+
+El microservicio controla quién accede a CLAB y con qué permisos, y mantiene
+la información académica con la que se vinculan las reservas. Su motivo de
+cambio son las reglas de acceso y la organización académica de la
+institución. El alcance se definió a partir del código del sistema y de las
+historias de usuario de la Entrega~1, analizando el dominio y sus
+dependencias para identificar los límites del servicio
+\cite{abgaz2023decomposition,oumoussa2024evolution,velepucha2023survey}.
+
+El servicio atiende el inicio de sesión con credenciales institucionales
+(RF-01), la asignación de roles y permisos a las cuentas (RF-02) y la gestión
+de carreras, asignaturas, horarios y periodos académicos (RF-16). También
+administra las solicitudes de acceso de nuevos usuarios y emite el token con
+el que el API Gateway identifica a cada usuario. Para el RF-14, registra sus
+propios cambios y los publica; Información y Avisos reúne la vista central.
+
+\subsubsection{Propiedad de datos}
+
+El servicio usa una base PostgreSQL propia, con las siguientes entidades:
+
+\begin{itemize}
+    \item \textbf{Usuario y sesión activa.} El usuario conserva sus
+    credenciales cifradas, su estado y sus datos de contacto. La sesión
+    activa registra el token emitido y permite cerrarlo al finalizar la
+    sesión.
+    \item \textbf{Rol, permiso y módulo.} Los roles agrupan permisos sobre
+    los módulos del sistema. Las relaciones entre usuario y rol, y entre rol
+    y permiso, determinan qué operaciones puede ejecutar cada cuenta.
+    \item \textbf{Solicitud de acceso.} Conserva la petición de un nuevo
+    usuario, su estado (pendiente, aprobada o rechazada) y quién la resolvió.
+    \item \textbf{Carrera, asignatura, horario y periodo académico.}
+    Las asignaturas pertenecen a una carrera; los horarios vinculan una
+    asignatura con un docente y un periodo.
+    \item \textbf{Estudiante, matrícula e inscripción.} Relacionan a los
+    estudiantes con las carreras y asignaturas del periodo vigente.
+    \item \textbf{Sede y facultad.} Mantienen la organización institucional
+    que Laboratorios y Recursos referencia por identificador.
+    % Confirmar con el grupo que Sede y Facultad quedan en este servicio.
+    \item \textbf{Registro de auditoría y evento pendiente.} Conservan los
+    cambios del servicio con usuario, fecha y operación, y los eventos que
+    aún deben publicarse en RabbitMQ.
+\end{itemize}
+
+En el monolito, estas entidades se reparten entre los esquemas
+\texttt{usuarios}, \texttt{academico} y \texttt{organizacion} de una base
+compartida. En el diseño pasan a una base exclusiva del servicio. La tabla de
+auditoría que hoy está en \texttt{usuarios} deja de ser central: cada servicio
+registra sus cambios. Las reservas y los laboratorios solo se referencian
+mediante identificadores externos. La base por servicio es el patrón de
+despliegue de datos más extendido en la práctica, a cambio de resolver la
+consistencia entre servicios fuera de la base \cite{laigner2021datamanagement}.
+
+\subsubsection{Componentes internos}
+
+\begin{description}
+    \item[API REST.] Recibe las solicitudes del Gateway y las consultas
+    internas de otros servicios. Valida la entrada y la dirige al componente
+    correspondiente.
+    \item[Autenticación y emisión de tokens.] Verifica las credenciales,
+    emite un JWT firmado con el identificador del usuario, su rol y sus
+    permisos, y registra la sesión activa.
+    \item[Gestión de usuarios, roles y permisos.] Crea, activa o desactiva
+    cuentas y asigna roles y permisos.
+    \item[Solicitudes de acceso.] Registra las peticiones de nuevos usuarios
+    y gestiona su aprobación o rechazo.
+    \item[Gestión académica.] Administra carreras, asignaturas, horarios,
+    periodos y la organización institucional.
+    \item[Repositorios de persistencia.] Leen y escriben los datos de la
+    base PostgreSQL del servicio.
+    \item[Registro de auditoría.] Guarda cada cambio con usuario, fecha y
+    operación, junto con el evento pendiente, en la misma transacción.
+    \item[Publicador de eventos.] Envía los eventos pendientes a RabbitMQ,
+    registra su publicación al recibir la confirmación y reintenta los que
+    no se confirmaron.
+\end{description}
+
+\subsubsection{Mecanismos de comunicación}
+
+\paragraph{REST sobre HTTPS, sincrónico.}
+Los clientes web y móvil ingresan por el API Gateway. El inicio de sesión
+necesita una respuesta inmediata con el token o el rechazo, por lo que usa
+REST. El Gateway valida la firma y la vigencia del JWT en cada solicitud y
+envía a los servicios el usuario, el rol y los permisos; por eso Reservas y
+Agenda no consulta a este servicio en cada operación. Este esquema sigue los
+patrones de token de acceso e identidad y de autorización en el borde, en los
+que el Gateway concentra la autenticación de las solicitudes
+\cite{waseem2022decision,haindl2024interservice}. Laboratorios y Recursos
+sí lo consulta al asignar un encargado, porque necesita el resultado antes de
+guardar la asignación.
+
+\begin{description}
+    \item[Autenticación.] \texttt{POST /auth/login},
+    \texttt{POST /auth/logout} y \texttt{GET /auth/mis-roles}.
+    \item[Usuarios y accesos.] \texttt{GET /usuarios},
+    \texttt{POST /usuarios}, \texttt{PATCH /usuarios/\{id\}/estado},
+    \texttt{POST /solicitudes} y \texttt{PATCH /solicitudes/\{id\}}.
+    \item[Roles y permisos.] \texttt{GET /roles}, \texttt{POST /roles} y
+    \texttt{PUT /roles/\{id\}/permisos}.
+    \item[Académico.] \texttt{GET} y \texttt{POST} sobre
+    \texttt{/carreras}, \texttt{/asignaturas}, \texttt{/horarios} y
+    \texttt{/periodos}.
+    \item[Consulta interna.] \texttt{GET /usuarios/\{id\}/roles}. Devuelve
+    el estado y los roles de un usuario para validar a un encargado de
+    laboratorio.
+\end{description}
+
+\paragraph{RabbitMQ sobre AMQP, asincrónico.}
+El servicio publica los eventos \texttt{UsuarioDesactivado},
+\texttt{RolUsuarioModificado} y \texttt{PeriodoAcademicoCerrado}, además de
+los registros de auditoría. Cada evento incluye su identificador, el
+identificador del recurso afectado, el usuario responsable y la fecha.
+Información y Avisos los consume para notificar a los afectados y para la
+consulta central de auditoría. El servicio no consume eventos.
+
+\subsubsection{Fallos y consistencia}
+
+Si el servicio no responde, los tokens ya emitidos siguen siendo válidos
+hasta su vencimiento, porque el Gateway los valida sin consultarlo; las
+operaciones en curso de los demás servicios continúan. Fallan los nuevos
+inicios de sesión y la asignación de encargados, que queda sin guardarse.
+Un cambio de rol se aplica en el siguiente token emitido; el vencimiento
+corto del JWT limita el tiempo en que un permiso retirado sigue vigente.
+El registro local de eventos permite reintentar la publicación si
+RabbitMQ se interrumpe, y los consumidores descartan los identificadores
+ya procesados.
